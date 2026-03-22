@@ -2,6 +2,7 @@ package com.localserve.localserve.service;
 
 import com.localserve.localserve.dto.LoginRequest;
 import com.localserve.localserve.dto.RegisterRequest;
+import com.localserve.localserve.entity.Provider;
 import com.localserve.localserve.entity.Role;
 import com.localserve.localserve.entity.User;
 import com.localserve.localserve.repository.UserRepository;
@@ -35,6 +36,21 @@ public class AuthService {
                 .role(Role.valueOf(request.getRole().toUpperCase()))
                 .createdAt(LocalDateTime.now())
                 .build();
+
+        if (user.getRole() == Role.PROVIDER) {
+
+            Provider provider = Provider.builder()
+                    .user(user)
+                    .description("New Provider")
+                    .experienceYears(0)
+                    .serviceRadius(5.0)
+                    .rating(0.0)
+                    .build();
+
+            // IMPORTANT: set mapping
+            user.setProvider(provider);
+        }
+
 
         userRepository.save(user);
 
