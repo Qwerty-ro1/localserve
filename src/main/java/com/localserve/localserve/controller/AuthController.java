@@ -3,6 +3,7 @@ package com.localserve.localserve.controller;
 import com.localserve.localserve.dto.LoginRequest;
 import com.localserve.localserve.dto.RegisterRequest;
 import com.localserve.localserve.service.AuthService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,7 +20,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public String login(@RequestBody LoginRequest request) {
+    public String login(@RequestBody @Valid LoginRequest request) {
         return authService.login(request);
     }
 

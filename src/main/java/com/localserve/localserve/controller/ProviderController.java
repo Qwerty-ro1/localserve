@@ -5,6 +5,7 @@ import com.localserve.localserve.dto.ProviderResponse;
 import com.localserve.localserve.service.ProviderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,6 +22,8 @@ public class ProviderController {
     public ProviderResponse registerProvider(@RequestBody ProviderRequest request) {
         return providerService.registerProvider(request);
     }
+
+
 
     @GetMapping("/{id}")
     public ProviderResponse getProvider(@PathVariable Long id) {

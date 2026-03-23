@@ -1,7 +1,10 @@
 package com.localserve.localserve.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.List;
 
 @Entity
 @Table(name = "service_offerings")
@@ -21,4 +24,8 @@ public class ServiceOffering {
     @ManyToOne
     @JoinColumn(name = "provider_id", nullable = false)
     private Provider provider;
+
+    @OneToMany(mappedBy = "serviceOffering")
+    @JsonIgnore
+    private List<Booking> bookings;
 }

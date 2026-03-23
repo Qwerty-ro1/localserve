@@ -1,5 +1,6 @@
 package com.localserve.localserve.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -24,6 +25,10 @@ public class Provider {
 
     @OneToMany(mappedBy = "provider", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ServiceOffering> offerings;
+
+    @OneToMany(mappedBy = "provider")
+    @JsonIgnore
+    private List<Booking> bookings;
 
     private String businessName;
 
