@@ -2,8 +2,7 @@ package com.localserve.localserve.service;
 
 import com.localserve.localserve.dto.ProviderRequest;
 import com.localserve.localserve.dto.ProviderResponse;
-
-import java.util.List;
+import org.springframework.data.domain.Page;
 
 public interface ProviderService {
 
@@ -13,7 +12,7 @@ public interface ProviderService {
 
     ProviderResponse updateProvider(Long id, ProviderRequest request);
 
-    List<ProviderResponse> searchProviders(String offering, double lat, double lon, double radius);
+    Page<ProviderResponse> searchProviders(Long serviceCategoryId, double lat, double lon, double radius, int page, int size, String sortBy, String direction);
 
     ProviderResponse getMyProvider();
 }

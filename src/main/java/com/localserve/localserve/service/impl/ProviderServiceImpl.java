@@ -2,20 +2,22 @@ package com.localserve.localserve.service.impl;
 
 import com.localserve.localserve.dto.ProviderRequest;
 import com.localserve.localserve.dto.ProviderResponse;
-import com.localserve.localserve.entity.Provider;
-import com.localserve.localserve.entity.Role;
-import com.localserve.localserve.entity.ServiceOffering;
-import com.localserve.localserve.entity.User;
+import com.localserve.localserve.entity.*;
 import com.localserve.localserve.exception.BadRequestException;
 import com.localserve.localserve.exception.ResourceNotFoundException;
+import com.localserve.localserve.repository.MasterServiceCategoryRepository;
 import com.localserve.localserve.repository.ProviderRepository;
 import com.localserve.localserve.repository.UserRepository;
 import com.localserve.localserve.service.ProviderService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,28 +27,27 @@ public class ProviderServiceImpl implements ProviderService {
 
     private final ProviderRepository providerRepository;
     private final UserRepository userRepository;
+    private final MasterServiceCategoryRepository masterServiceCategoryRepository;
 
-    // Constant used in Haversine formula to calculate distance
     private static final double EARTH_RADIUS = 6371;
 
-    // Registers a provider for the currently logged-in user
     @Override
     @Transactional
     public ProviderResponse registerProvider(ProviderRequest request) {
 
-        // Get logged-in user email
+        if (request.getLatitude() == null || request.getLongitude() == null) {
+            throw new BadRequestException("Latitude and Longitude are required");
+        }
+
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        // Fetch user from database
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
-        // Prevent duplicate provider registration
         if (providerRepository.findByUser(user).isPresent()) {
             throw new BadRequestException("Provider already registered");
         }
 
-        // Create provider entity
         Provider provider = Provider.builder()
                 .user(user)
                 .businessName(request.getBusinessName())
@@ -59,36 +60,36 @@ public class ProviderServiceImpl implements ProviderService {
                 .rating(0.0)
                 .build();
 
-        // Create service offerings
-        List<ServiceOffering> offerings = request.getOfferings().stream()
-                .map(name -> ServiceOffering.builder()
-                        .name(name)
-                        .provider(provider)
-                        .build())
-                .collect(Collectors.toList());
+        // Map serviceCategoryIds to ServiceOffering
+        List<ServiceOffering> offerings = request.getServiceCategoryIds()
+                .stream()
+                .map(id -> {
+                    MasterServiceCategory category = masterServiceCategoryRepository.findById(id)
+                            .orElseThrow(() -> new ResourceNotFoundException("Service category not found"));
+                    return ServiceOffering.builder()
+                            .serviceCategory(category)
+                            .provider(provider)
+                            .build();
+                })
+                .toList();
 
         provider.setOfferings(offerings);
 
-        // Save provider
         providerRepository.save(provider);
 
-        // Update user role to PROVIDER
         user.setRole(Role.PROVIDER);
         userRepository.save(user);
 
         return mapToResponse(provider);
     }
 
-    // Fetch provider by ID
     @Override
     public ProviderResponse getProviderById(Long id) {
         Provider provider = providerRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Provider not found"));
-
         return mapToResponse(provider);
     }
 
-    // Update provider details
     @Override
     @Transactional
     public ProviderResponse updateProvider(Long id, ProviderRequest request) {
@@ -96,7 +97,6 @@ public class ProviderServiceImpl implements ProviderService {
         Provider provider = providerRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Provider not found"));
 
-        // Update fields
         provider.setBusinessName(request.getBusinessName());
         provider.setDescription(request.getDescription());
         provider.setExperienceYears(request.getExperienceYears());
@@ -105,15 +105,19 @@ public class ProviderServiceImpl implements ProviderService {
         provider.setLatitude(request.getLatitude());
         provider.setLongitude(request.getLongitude());
 
-        // Replace existing offerings
         provider.getOfferings().clear();
 
-        List<ServiceOffering> offerings = request.getOfferings().stream()
-                .map(name -> ServiceOffering.builder()
-                        .name(name)
-                        .provider(provider)
-                        .build())
-                .collect(Collectors.toList());
+        List<ServiceOffering> offerings = request.getServiceCategoryIds()
+                .stream()
+                .map(catId -> {
+                    MasterServiceCategory category = masterServiceCategoryRepository.findById(catId)
+                            .orElseThrow(() -> new ResourceNotFoundException("Service category not found"));
+                    return ServiceOffering.builder()
+                            .serviceCategory(category)
+                            .provider(provider)
+                            .build();
+                })
+                .toList();
 
         provider.setOfferings(offerings);
 
@@ -122,7 +126,6 @@ public class ProviderServiceImpl implements ProviderService {
         return mapToResponse(provider);
     }
 
-    // Get provider associated with the logged-in user
     @Override
     public ProviderResponse getMyProvider() {
 
@@ -137,27 +140,71 @@ public class ProviderServiceImpl implements ProviderService {
         return mapToResponse(provider);
     }
 
-    // Search providers by offering name and distance radius
     @Override
-    public List<ProviderResponse> searchProviders(String offeringName, double lat, double lon, double radius) {
+    public Page<ProviderResponse> searchProviders(
+            Long serviceCategoryId,
+            double lat,
+            double lon,
+            double radius,
+            int page,
+            int size,
+            String sortBy,
+            String direction
+    ) {
 
         List<Provider> providers;
 
-        // Fetch providers based on offering filter
-        if (offeringName == null || offeringName.isEmpty()) {
+        if (serviceCategoryId == null) {
             providers = providerRepository.findAll();
         } else {
-            providers = providerRepository.findByOfferings_NameContainingIgnoreCase(offeringName);
+            providers = providerRepository.findByOfferings_ServiceCategory_Id(serviceCategoryId);
         }
 
-        // Filter providers within radius
-        return providers.stream()
-                .filter(p -> calculateDistance(lat, lon, p.getLatitude(), p.getLongitude()) <= radius)
-                .map(this::mapToResponse)
+        List<ProviderResponse> filteredList = providers.stream()
+                .map(provider -> {
+                    double distance = calculateDistance(lat, lon, provider.getLatitude(), provider.getLongitude());
+                    if (distance <= radius) {
+                        ProviderResponse response = mapToResponse(provider);
+                        response.setDistance(distance);
+                        return response;
+                    }
+                    return null;
+                })
+                .filter(p -> p != null)
                 .collect(Collectors.toList());
+
+        if (!List.of("rating", "distance").contains(sortBy)) {
+            sortBy = "distance";
+        }
+
+        if (sortBy.equals("rating")) {
+            if (direction.equalsIgnoreCase("desc")) {
+                filteredList.sort((a, b) -> Double.compare(b.getRating(), a.getRating()));
+            } else {
+                filteredList.sort((a, b) -> Double.compare(a.getRating(), b.getRating()));
+            }
+        }
+
+        if (sortBy.equals("distance")) {
+            if (direction.equalsIgnoreCase("desc")) {
+                filteredList.sort((a, b) -> Double.compare(b.getDistance(), a.getDistance()));
+            } else {
+                filteredList.sort((a, b) -> Double.compare(a.getDistance(), b.getDistance()));
+            }
+        }
+
+        int start = page * size;
+        int end = Math.min(start + size, filteredList.size());
+
+        if (start >= filteredList.size()) {
+            return new PageImpl<>(Collections.emptyList(), PageRequest.of(page, size), filteredList.size());
+        }
+
+        List<ProviderResponse> pageContent = filteredList.subList(start, end);
+
+        return new PageImpl<>(pageContent, PageRequest.of(page, size), filteredList.size());
     }
 
-    // Haversine formula to calculate distance between two coordinates
     private double calculateDistance(double lat1, double lon1, double lat2, double lon2) {
 
         double latDistance = Math.toRadians(lat2 - lat1);
@@ -172,7 +219,6 @@ public class ProviderServiceImpl implements ProviderService {
         return EARTH_RADIUS * c;
     }
 
-    // Convert Provider entity to response DTO
     private ProviderResponse mapToResponse(Provider provider) {
 
         ProviderResponse response = new ProviderResponse();
@@ -187,10 +233,11 @@ public class ProviderServiceImpl implements ProviderService {
         response.setLatitude(provider.getLatitude());
         response.setLongitude(provider.getLongitude());
 
-        response.setOfferings(provider.getOfferings()
-                .stream()
-                .map(ServiceOffering::getName)
-                .collect(Collectors.toList()));
+        response.setServices(
+                provider.getOfferings().stream()
+                        .map(o -> o.getServiceCategory().getName())
+                        .collect(Collectors.toList())
+        );
 
         return response;
     }
