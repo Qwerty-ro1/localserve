@@ -1,10 +1,13 @@
 package com.localserve.localserve.controller;
 
+import com.localserve.localserve.dto.ApiResponse;
 import com.localserve.localserve.dto.LoginRequest;
 import com.localserve.localserve.dto.RegisterRequest;
 import com.localserve.localserve.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -15,17 +18,22 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/register")
-    public String register(@RequestBody RegisterRequest request) {
-        return authService.register(request);
+    public ResponseEntity<ApiResponse<String>> register(@RequestBody @Valid RegisterRequest request) {
+        String message = authService.register(request);
+        // Returns success: true with the registration message
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(ApiResponse.success(message, null));
     }
 
     @PostMapping("/login")
-    public String login(@RequestBody @Valid LoginRequest request) {
-        return authService.login(request);
+    public ResponseEntity<ApiResponse<String>> login(@RequestBody @Valid LoginRequest request) {
+        String token = authService.login(request);
+        // The JWT token is passed as the 'data' payload
+        return ResponseEntity.ok(ApiResponse.success("Login successful", token));
     }
 
     @GetMapping("/user")
-    public String user() {
-        return "Hello User";
+    public ResponseEntity<ApiResponse<String>> user() {
+        return ResponseEntity.ok(ApiResponse.success("Status check", "Hello User"));
     }
 }

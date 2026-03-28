@@ -1,13 +1,15 @@
 package com.localserve.localserve.exception;
 
-import com.localserve.localserve.dto.ErrorResponse;
-import com.localserve.localserve.dto.ValidationErrorResponse;
+import com.localserve.localserve.dto.ApiResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -16,57 +18,83 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+
     // 404 - Not Found
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleNotFound(ResourceNotFoundException ex) {
-        return buildErrorResponse(HttpStatus.NOT_FOUND, ex.getMessage());
+    public ResponseEntity<ApiResponse<Void>> handleNotFound(ResourceNotFoundException ex) {
+        logger.warn("Resource not found: {}", ex.getMessage());
+        return buildResponse(HttpStatus.NOT_FOUND, ex.getMessage());
     }
 
     // 400 - Bad Request
     @ExceptionHandler(BadRequestException.class)
-    public ResponseEntity<ErrorResponse> handleBadRequest(BadRequestException ex) {
-        return buildErrorResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
+    public ResponseEntity<ApiResponse<Void>> handleBadRequest(BadRequestException ex) {
+        logger.warn("Bad request: {}", ex.getMessage());
+        return buildResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 
-    // 403 - Forbidden
+    // 401 - Unauthorized (FIXED)
     @ExceptionHandler(UnauthorizedException.class)
-    public ResponseEntity<ErrorResponse> handleUnauthorized(UnauthorizedException ex) {
-        return buildErrorResponse(HttpStatus.FORBIDDEN, ex.getMessage());
+    public ResponseEntity<ApiResponse<Void>> handleUnauthorized(UnauthorizedException ex) {
+        logger.warn("Unauthorized access: {}", ex.getMessage());
+        return buildResponse(HttpStatus.UNAUTHORIZED, ex.getMessage());
     }
 
-    // Validation Errors
+    // 403 - Forbidden (Spring Security)
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ApiResponse<Void>> handleAccessDenied(AccessDeniedException ex) {
+        logger.warn("Access denied: {}", ex.getMessage());
+        return buildResponse(HttpStatus.FORBIDDEN, "Access denied");
+    }
+
+    // 400 - Validation Errors
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ValidationErrorResponse> handleValidation(MethodArgumentNotValidException ex) {
+    public ResponseEntity<ApiResponse<Map<String, String>>> handleValidation(MethodArgumentNotValidException ex) {
 
         Map<String, String> errors = new HashMap<>();
-
         ex.getBindingResult().getFieldErrors()
                 .forEach(error -> errors.put(error.getField(), error.getDefaultMessage()));
 
-        ValidationErrorResponse response = ValidationErrorResponse.builder()
-                .message("Validation failed: Please check the provided fields.")
+        logger.warn("Validation failed: {}", errors);
+
+        ApiResponse<Map<String, String>> response = ApiResponse.<Map<String, String>>builder()
+                .success(false)
+                .message("Request validation failed")
+                .data(errors)
                 .timestamp(LocalDateTime.now())
-                .status(HttpStatus.BAD_REQUEST.value())
-                .errors(errors)
                 .build();
 
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
-    // Generic Exception (fallback)
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleGeneric(Exception ex) {
-
-        return buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong");
+    // 400 - Invalid JSON
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ApiResponse<Void>> handleInvalidJson(HttpMessageNotReadableException ex) {
+        logger.warn("Invalid JSON request: {}", ex.getMessage());
+        return buildResponse(HttpStatus.BAD_REQUEST, "Invalid request body");
     }
 
-    // Common builder
-    private ResponseEntity<ErrorResponse> buildErrorResponse(HttpStatus status, String message) {
+    // 400 - Illegal Arguments
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ApiResponse<Void>> handleIllegalArgument(IllegalArgumentException ex) {
+        logger.warn("Illegal argument: {}", ex.getMessage());
+        return buildResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
+    }
 
-        ErrorResponse response = ErrorResponse.builder()
-                .timestamp(LocalDateTime.now())
-                .status(status.value())
+    // 500 - Generic Exception (Fallback)
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ApiResponse<Void>> handleGeneric(Exception ex) {
+        logger.error("Unhandled exception occurred: ", ex);
+        return buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong");
+    }
+
+    // Common Response Builder
+    private ResponseEntity<ApiResponse<Void>> buildResponse(HttpStatus status, String message) {
+        ApiResponse<Void> response = ApiResponse.<Void>builder()
+                .success(false)
                 .message(message)
+                .timestamp(LocalDateTime.now())
                 .build();
 
         return new ResponseEntity<>(response, status);

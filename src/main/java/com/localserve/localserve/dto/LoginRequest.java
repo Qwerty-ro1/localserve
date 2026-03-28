@@ -2,9 +2,12 @@ package com.localserve.localserve.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import lombok.Data;
+import lombok.*;
 
 @Data
+@Builder
+@NoArgsConstructor  // For Hibernate / JSON Deserialization
+@AllArgsConstructor
 public class LoginRequest {
 
     @NotBlank(message = "Email is required")

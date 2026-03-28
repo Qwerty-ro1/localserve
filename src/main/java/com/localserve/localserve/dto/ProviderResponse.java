@@ -1,10 +1,15 @@
 package com.localserve.localserve.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-
+import lombok.NoArgsConstructor;
 import java.util.List;
 
+
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Data
 public class ProviderResponse {
 
@@ -17,5 +22,6 @@ public class ProviderResponse {
     private String location;
     private double latitude;
     private double longitude;
-    private List<String> offerings;
+    private Double distance;
+    private List<String> services;;
 }

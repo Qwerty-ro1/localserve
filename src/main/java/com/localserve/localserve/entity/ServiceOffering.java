@@ -19,7 +19,10 @@ public class ServiceOffering {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;  // e.g., "Electrician", "Plumber"
+    // Link to master service category
+    @ManyToOne
+    @JoinColumn(name = "service_category_id", nullable = false)
+    private MasterServiceCategory serviceCategory;
 
     @ManyToOne
     @JoinColumn(name = "provider_id", nullable = false)

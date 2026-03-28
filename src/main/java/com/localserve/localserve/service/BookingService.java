@@ -1,9 +1,9 @@
 package com.localserve.localserve.service;
 
 import com.localserve.localserve.dto.BookingResponse;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import java.time.LocalDateTime;
-import java.util.List;
 
 public interface BookingService {
 
@@ -16,7 +16,7 @@ public interface BookingService {
 
     BookingResponse createBooking(String email, Long serviceOfferingId, LocalDateTime bookingTime);
 
-    List<BookingResponse> getUserBookings(String email);
+    Page<BookingResponse> getUserBookings(String email, int page, int size, String sortBy, String direction);
 
-    List<BookingResponse> getProviderBookings(String email);
+    Page<BookingResponse> getProviderBookings(String email, int page, int size, String sortBy, String direction);
 }

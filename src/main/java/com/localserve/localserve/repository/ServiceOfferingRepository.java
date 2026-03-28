@@ -10,5 +10,5 @@ public interface ServiceOfferingRepository extends JpaRepository<ServiceOffering
 
     // Get all services offered by a provider
     List<ServiceOffering> findByProvider(Provider provider);
-    List<ServiceOffering> findByName(String name);
+//    List<ServiceOffering> findByCategory_Name(String name);
 }

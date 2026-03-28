@@ -14,6 +14,5 @@ public interface ProviderRepository extends JpaRepository<Provider, Long> {
     boolean existsByUser(User user);
     Optional<Provider> findByUser(User user);
 
-    // Search providers by offering name
-    List<Provider> findByOfferings_NameContainingIgnoreCase(String offeringName);
+    List<Provider> findByOfferings_ServiceCategory_Id(Long serviceId);
 }
