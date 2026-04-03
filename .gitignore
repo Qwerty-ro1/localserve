@@ -1,43 +1,14 @@
-HELP.md
-target/
-.mvn/wrapper/maven-wrapper.jar
-!**/src/main/**/target/
-!**/src/test/**/target/
+# Root ignore for Monorepo
 
-target/
-*.log
-*.class
-*.jar
-*.war
-node_modules/
+# Java/Backend
+**/target/
+**/*.class
+
+# Node/Frontend
+**/node_modules/
+**/dist/
+
+# Misc
+.DS_Store
 .env
-.idea/
-.vscode/
-
-### STS ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
-
-### IntelliJ IDEA ###
-.idea
-*.iws
-*.iml
-*.ipr
-
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
-build/
-!**/src/main/**/build/
-!**/src/test/**/build/
-
-### VS Code ###
-.vscode/
+HELP.md
