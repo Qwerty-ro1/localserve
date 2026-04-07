@@ -36,7 +36,7 @@ public class SecurityConfig {
 
                 // 3. Configure Path Permissions
                 .authorizeHttpRequests(auth -> auth
-                        // Public Auth Endpoints
+                        // Public Auth Endpoints - CORS preflight and actual requests
                         .requestMatchers("/api/auth/**").permitAll()
 
                         // Public Search & Provider Profiles (Window Shopping)
@@ -63,16 +63,19 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
 
         // The URL of your React development server
-        configuration.setAllowedOrigins(List.of("http://localhost:3000"));
+        configuration.setAllowedOrigins(List.of("http://localhost:5173"));
 
         // Standard methods needed for a REST API
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
 
         // Allow all headers (Authorization, Content-Type, etc.)
         configuration.setAllowedHeaders(List.of("*"));
 
         // Allow sending cookies or auth headers across origins
         configuration.setAllowCredentials(true);
+
+        // Cache preflight for 1 hour
+        configuration.setMaxAge(3600L);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
