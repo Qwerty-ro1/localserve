@@ -36,9 +36,6 @@ public class User implements UserDetails {
 
     private String phone;
 
-    private Double latitude;
-    private Double longitude;
-
     private LocalDateTime createdAt;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)

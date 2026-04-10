@@ -28,7 +28,8 @@ public class BookingController {
         BookingResponse response = bookingService.createBooking(
                 email,
                 request.getServiceOfferingId(),
-                request.getBookingTime()
+                request.getBookingTime(),
+                request.getServiceAddressId()
         );
 
         return ResponseEntity.status(HttpStatus.CREATED)

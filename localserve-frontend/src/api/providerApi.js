@@ -39,6 +39,11 @@ export const searchProviders = async (
   return res.data;
 };
 
+export const getMyProvider = async () => {
+  const res = await api.get("/api/providers/my");
+  return res.data;
+};
+
 /**
  * Get provider details by ID
  */

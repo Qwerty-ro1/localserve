@@ -14,8 +14,8 @@ public interface BookingService {
 
     BookingResponse completeBooking(Long bookingId);
 
-    BookingResponse createBooking(String email, Long serviceOfferingId, LocalDateTime bookingTime);
-
+    BookingResponse createBooking(String email, Long serviceOfferingId,
+                                  LocalDateTime bookingTime, Long serviceAddressId);
     Page<BookingResponse> getUserBookings(String email, int page, int size, String sortBy, String direction);
 
     Page<BookingResponse> getProviderBookings(String email, int page, int size, String sortBy, String direction);

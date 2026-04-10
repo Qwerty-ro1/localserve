@@ -5,19 +5,40 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a8482d62-e858-4ae0-b6c3-e6d0505c97e1" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/localserve-backend/src/main/java/com/localserve/localserve/dto/LoginResponse.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/localserve-backend/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/localserve-backend/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/localserve-backend/insert-test-data.sql" beforeDir="false" afterPath="$PROJECT_DIR$/localserve-backend/insert-test-data.sql" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/localserve-backend/src/main/java/com/localserve/localserve/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/localserve-backend/src/main/java/com/localserve/localserve/config/SecurityConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/localserve-frontend/eslint.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/localserve-frontend/eslint.config.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/localserve-frontend/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/localserve-frontend/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/localserve-backend/src/main/java/com/localserve/localserve/controller/AuthController.java" beforeDir="false" afterPath="$PROJECT_DIR$/localserve-backend/src/main/java/com/localserve/localserve/controller/AuthController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/localserve-backend/src/main/java/com/localserve/localserve/controller/BookingController.java" beforeDir="false" afterPath="$PROJECT_DIR$/localserve-backend/src/main/java/com/localserve/localserve/controller/BookingController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/localserve-backend/src/main/java/com/localserve/localserve/controller/ProviderController.java" beforeDir="false" afterPath="$PROJECT_DIR$/localserve-backend/src/main/java/com/localserve/localserve/controller/ProviderController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/localserve-backend/src/main/java/com/localserve/localserve/dto/BookingResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/localserve-backend/src/main/java/com/localserve/localserve/dto/BookingResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/localserve-backend/src/main/java/com/localserve/localserve/dto/CreateBookingRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/localserve-backend/src/main/java/com/localserve/localserve/dto/CreateBookingRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/localserve-backend/src/main/java/com/localserve/localserve/dto/RegisterRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/localserve-backend/src/main/java/com/localserve/localserve/dto/RegisterRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/localserve-backend/src/main/java/com/localserve/localserve/entity/Booking.java" beforeDir="false" afterPath="$PROJECT_DIR$/localserve-backend/src/main/java/com/localserve/localserve/entity/Booking.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/localserve-backend/src/main/java/com/localserve/localserve/entity/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/localserve-backend/src/main/java/com/localserve/localserve/entity/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/localserve-backend/src/main/java/com/localserve/localserve/exception/GlobalExceptionHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/localserve-backend/src/main/java/com/localserve/localserve/exception/GlobalExceptionHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/localserve-backend/src/main/java/com/localserve/localserve/repository/BookingRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/localserve-backend/src/main/java/com/localserve/localserve/repository/BookingRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/localserve-backend/src/main/java/com/localserve/localserve/security/JwtService.java" beforeDir="false" afterPath="$PROJECT_DIR$/localserve-backend/src/main/java/com/localserve/localserve/security/JwtService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/localserve-backend/src/main/java/com/localserve/localserve/service/AuthService.java" beforeDir="false" afterPath="$PROJECT_DIR$/localserve-backend/src/main/java/com/localserve/localserve/service/AuthService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/localserve-backend/src/main/java/com/localserve/localserve/service/BookingService.java" beforeDir="false" afterPath="$PROJECT_DIR$/localserve-backend/src/main/java/com/localserve/localserve/service/BookingService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/localserve-backend/src/main/java/com/localserve/localserve/service/impl/AuthServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/localserve-backend/src/main/java/com/localserve/localserve/service/impl/AuthServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/localserve-backend/src/main/java/com/localserve/localserve/service/impl/BookingServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/localserve-backend/src/main/java/com/localserve/localserve/service/impl/BookingServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/localserve-backend/src/main/java/com/localserve/localserve/service/impl/ProviderServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/localserve-backend/src/main/java/com/localserve/localserve/service/impl/ProviderServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/localserve-backend/src/test/java/com/localserve/localserve/controller/AuthControllerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/localserve-backend/src/test/java/com/localserve/localserve/controller/AuthControllerTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/localserve-backend/src/test/java/com/localserve/localserve/service/impl/AuthServiceImplTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/localserve-backend/src/test/java/com/localserve/localserve/service/impl/AuthServiceImplTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/localserve-frontend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/localserve-frontend/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/localserve-frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/localserve-frontend/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/localserve-frontend/src/App.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/localserve-frontend/src/App.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/localserve-frontend/src/index.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/localserve-frontend/src/main.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/localserve-frontend/vite.config.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/localserve-frontend/src/api/providerApi.js" beforeDir="false" afterPath="$PROJECT_DIR$/localserve-frontend/src/api/providerApi.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/localserve-frontend/src/components/AuthGuard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/localserve-frontend/src/components/AuthGuard.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/localserve-frontend/src/components/BackButtonWarning.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/localserve-frontend/src/context/AuthContext.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/localserve-frontend/src/context/AuthContext.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/localserve-frontend/src/pages/Dashboard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/localserve-frontend/src/pages/Dashboard.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/localserve-frontend/src/pages/Providers.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/localserve-frontend/src/pages/Providers.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/localserve-frontend/src/pages/Register.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/localserve-frontend/src/pages/Register.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/localserve-frontend/src/pages/login.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/localserve-frontend/src/pages/login.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/localserve-frontend/src/routes/AppRoutes.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/localserve-frontend/src/routes/AppRoutes.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/localserve-frontend/src/routes/PrivateRoute.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/localserve-frontend/src/routes/PrivateRoute.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -31,6 +52,14 @@
   </component>
   <component name="CopilotUserSelectedChatMode">
     <option name="chatModeId" value="Agent" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Enum" />
+        <option value="Class" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -50,19 +79,51 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "Spring Boot.LocalserveApplication.executor": "Run",
-    "git-widget-placeholder": "dev",
-    "kotlin-language-version-configured": "true",
-    "settings.editor.selected.configurable": "com.github.copilot.settings.chat.ChatConfigurable"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;JUnit.AuthControllerTest.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.ProviderServiceImplTest.executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;Spring Boot.LocalserveApplication.executor&quot;: &quot;Run&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;dev&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
   }
-}]]></component>
-  <component name="RunManager">
+}</component>
+  <component name="RunManager" selected="Spring Boot.LocalserveApplication">
+    <configuration name="AuthControllerTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="localserve" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.localserve.localserve.controller.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.localserve.localserve.controller" />
+      <option name="MAIN_CLASS_NAME" value="com.localserve.localserve.controller.AuthControllerTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ProviderServiceImplTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="localserve" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.localserve.localserve.service.impl.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.localserve.localserve.service.impl" />
+      <option name="MAIN_CLASS_NAME" value="com.localserve.localserve.service.impl.ProviderServiceImplTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="LocalserveApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
       <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UnknownPolicyInFreeMode" />
       <module name="localserve" />
@@ -80,6 +141,8 @@
     <recent_temporary>
       <list>
         <item itemvalue="Spring Boot.LocalserveApplication" />
+        <item itemvalue="JUnit.AuthControllerTest" />
+        <item itemvalue="JUnit.ProviderServiceImplTest" />
       </list>
     </recent_temporary>
   </component>

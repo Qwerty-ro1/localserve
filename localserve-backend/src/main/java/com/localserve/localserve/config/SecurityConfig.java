@@ -37,7 +37,7 @@ public class SecurityConfig {
                 // 3. Configure Path Permissions
                 .authorizeHttpRequests(auth -> auth
                         // Public Auth Endpoints - CORS preflight and actual requests
-                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/api/auth/**","/api/categories/**").permitAll()
 
                         // Public Search & Provider Profiles (Window Shopping)
                         .requestMatchers("/api/providers/search/**", "/api/providers/{id}").permitAll()
