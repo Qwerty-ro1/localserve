@@ -13,6 +13,10 @@ public class BookingResponse {
     private String status;
     private LocalDateTime bookingTime;
 
+    private UserAddressResponse serviceAddress;
+    private String userPhone;
+
+
     private Long userId;
     private String userName;
 

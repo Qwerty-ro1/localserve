@@ -1,6 +1,7 @@
 package com.localserve.localserve.service.impl;
 
 import com.localserve.localserve.dto.LoginRequest;
+import com.localserve.localserve.dto.LoginResponse;
 import com.localserve.localserve.dto.RegisterRequest;
 import com.localserve.localserve.entity.Role;
 import com.localserve.localserve.entity.User;
@@ -47,9 +48,9 @@ public class AuthServiceImpl implements AuthService {
         return "User registered successfully";
     }
 
-    // Authenticates user and returns JWT token
+    // Authenticates user and returns JWT token with user details
     @Override
-    public String login(LoginRequest request) {
+    public LoginResponse login(LoginRequest request) {
 
         // Fetch user by email
         User user = userRepository.findByEmail(request.getEmail())
@@ -60,7 +61,15 @@ public class AuthServiceImpl implements AuthService {
             throw new BadRequestException("Invalid credentials");
         }
 
-        // Generate JWT token
-        return jwtService.generateToken(user.getEmail());
+        // Generate JWT token with user details
+        String token = jwtService.generateTokenWithClaims(user.getEmail(), user.getRole().name(), user.getName());
+
+        // Return LoginResponse with token and user details
+        return LoginResponse.builder()
+                .token(token)
+                .email(user.getEmail())
+                .name(user.getName())
+                .role(user.getRole().name())
+                .build();
     }
 }

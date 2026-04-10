@@ -2,6 +2,7 @@ package com.localserve.localserve.controller;
 
 import com.localserve.localserve.dto.ApiResponse;
 import com.localserve.localserve.dto.LoginRequest;
+import com.localserve.localserve.dto.LoginResponse;
 import com.localserve.localserve.dto.RegisterRequest;
 import com.localserve.localserve.service.AuthService;
 import jakarta.validation.Valid;
@@ -26,10 +27,10 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<ApiResponse<String>> login(@RequestBody @Valid LoginRequest request) {
-        String token = authService.login(request);
-        // The JWT token is passed as the 'data' payload
-        return ResponseEntity.ok(ApiResponse.success("Login successful", token));
+    public ResponseEntity<ApiResponse<LoginResponse>> login(@RequestBody @Valid LoginRequest request) {
+        LoginResponse response = authService.login(request);
+        // Return LoginResponse with token and user details
+        return ResponseEntity.ok(ApiResponse.success("Login successful", response));
     }
 
     @GetMapping("/user")

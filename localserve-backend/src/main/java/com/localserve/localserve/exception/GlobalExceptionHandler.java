@@ -34,14 +34,21 @@ public class GlobalExceptionHandler {
         return buildResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 
-    // 401 - Unauthorized (FIXED)
+    // 401 - Unauthorized
     @ExceptionHandler(UnauthorizedException.class)
     public ResponseEntity<ApiResponse<Void>> handleUnauthorized(UnauthorizedException ex) {
         logger.warn("Unauthorized access: {}", ex.getMessage());
         return buildResponse(HttpStatus.UNAUTHORIZED, ex.getMessage());
     }
 
-    // 403 - Forbidden (Spring Security)
+    // 403 - Forbidden
+    @ExceptionHandler(ForbiddenException.class)
+    public ResponseEntity<ApiResponse<Void>> handleForbidden(ForbiddenException ex) {
+        logger.warn("Forbidden: {}", ex.getMessage());
+        return buildResponse(HttpStatus.FORBIDDEN, ex.getMessage());
+    }
+
+    // 403 - Forbidden
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<ApiResponse<Void>> handleAccessDenied(AccessDeniedException ex) {
         logger.warn("Access denied: {}", ex.getMessage());

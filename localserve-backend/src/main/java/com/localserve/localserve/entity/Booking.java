@@ -22,6 +22,10 @@ public class Booking {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "service_address_id", nullable = true)
+    private UserAddress serviceAddress;
+
     // PROVIDER
     @ManyToOne
     @JoinColumn(name = "provider_id", nullable = false)

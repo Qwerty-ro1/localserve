@@ -27,6 +27,13 @@ public class ProviderController {
                 .body(ApiResponse.success("Provider registered successfully", response));
     }
 
+    @GetMapping("/my")
+    @PreAuthorize("hasRole('PROVIDER')")
+    public ResponseEntity<ApiResponse<ProviderResponse>> getMyProvider() {
+        ProviderResponse response = providerService.getMyProvider();
+        return ResponseEntity.ok(ApiResponse.success("Provider profile retrieved", response));
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<ProviderResponse>> getProvider(@PathVariable Long id) {
         ProviderResponse response = providerService.getProviderById(id);

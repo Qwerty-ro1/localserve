@@ -4,7 +4,9 @@ import com.localserve.localserve.dto.ProviderRequest;
 import com.localserve.localserve.dto.ProviderResponse;
 import com.localserve.localserve.entity.*;
 import com.localserve.localserve.exception.BadRequestException;
+import com.localserve.localserve.exception.ForbiddenException;
 import com.localserve.localserve.exception.ResourceNotFoundException;
+import com.localserve.localserve.exception.UnauthorizedException;
 import com.localserve.localserve.repository.MasterServiceCategoryRepository;
 import com.localserve.localserve.repository.ProviderRepository;
 import com.localserve.localserve.repository.UserRepository;
@@ -94,8 +96,17 @@ public class ProviderServiceImpl implements ProviderService {
     @Transactional
     public ProviderResponse updateProvider(Long id, ProviderRequest request) {
 
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
         Provider provider = providerRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Provider not found"));
+
+        if (!provider.getUser().getId().equals(user.getId())) {
+            throw new ForbiddenException("You are not authorized to update this provider profile");
+        }
 
         provider.setBusinessName(request.getBusinessName());
         provider.setDescription(request.getDescription());
@@ -120,7 +131,6 @@ public class ProviderServiceImpl implements ProviderService {
                 .toList();
 
         provider.setOfferings(offerings);
-
         providerRepository.save(provider);
 
         return mapToResponse(provider);

@@ -2,18 +2,16 @@ package com.localserve.localserve.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.localserve.localserve.dto.LoginRequest;
+import com.localserve.localserve.dto.LoginResponse;
 import com.localserve.localserve.dto.RegisterRequest;
-import com.localserve.localserve.entity.User;
 import com.localserve.localserve.security.CustomUserDetailsService;
 import com.localserve.localserve.security.JwtService;
 import com.localserve.localserve.service.AuthService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.jackson.autoconfigure.JacksonAutoConfiguration;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -25,14 +23,14 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(AuthController.class)
-@AutoConfigureMockMvc(addFilters = false) // Disables Security filters to test Controller logic in isolation
+@AutoConfigureMockMvc(addFilters = false)
 class AuthControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
     @MockitoBean
-    private JwtService jwtService; // Fills the gap for your JwtAuthFilter
+    private JwtService jwtService;
 
     @MockitoBean
     private CustomUserDetailsService customUserDetailsService;
@@ -42,16 +40,19 @@ class AuthControllerTest {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    // REGISTER ENDPOINT
+    // ── REGISTER ────────────────────────────────────────────────
 
     @Test
     @DisplayName("POST /register - Success: Returns 201 Created")
     void register_ShouldReturnCreated_WhenInputIsValid() throws Exception {
-        // Arrange
-        RegisterRequest request = new RegisterRequest("Omkar", "test@test.com", "password123");
+        RegisterRequest request = RegisterRequest.builder()
+                .name("Omkar")
+                .email("test@test.com")
+                .password("password123")
+                .build();
+
         when(authService.register(any())).thenReturn("User registered successfully");
 
-        // Act & Assert
         mockMvc.perform(post("/api/auth/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
@@ -59,63 +60,112 @@ class AuthControllerTest {
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.message").value("User registered successfully"));
 
-        // Verify: The service was called exactly once
         verify(authService, times(1)).register(any());
     }
 
     @Test
-    @DisplayName("POST /register - Failure: Returns 400 Bad Request on empty input")
-    void register_ShouldFail_WhenInputIsInvalid() throws Exception {
-        // Arrange: Empty object triggers @Valid validation failures
-        RegisterRequest request = new RegisterRequest();
+    @DisplayName("POST /register - Failure: Returns 400 when name is blank")
+    void register_ShouldFail_WhenNameIsBlank() throws Exception {
+        RegisterRequest request = RegisterRequest.builder()
+                .name("")
+                .email("test@test.com")
+                .password("password123")
+                .build();
 
-        // Act & Assert
         mockMvc.perform(post("/api/auth/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.success").value(false));
 
-        // Verify: The service was NEVER called due to validation intercept
         verifyNoInteractions(authService);
     }
 
-    // LOGIN ENDPOINT
+    @Test
+    @DisplayName("POST /register - Failure: Returns 400 when email is invalid")
+    void register_ShouldFail_WhenEmailIsInvalid() throws Exception {
+        RegisterRequest request = RegisterRequest.builder()
+                .name("Omkar")
+                .email("not-an-email")
+                .password("password123")
+                .build();
+
+        mockMvc.perform(post("/api/auth/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.success").value(false));
+
+        verifyNoInteractions(authService);
+    }
+
+    // ── LOGIN ────────────────────────────────────────────────────
 
     @Test
-    @DisplayName("POST /login - Success: Returns JWT Token")
+    @DisplayName("POST /login - Success: Returns JWT token and user details")
     void login_ShouldReturnToken_WhenCredentialsAreValid() throws Exception {
-        // Arrange
-        LoginRequest request = new LoginRequest("test@test.com", "password123");
-        when(authService.login(any())).thenReturn("mocked-jwt-token");
+        LoginRequest request = LoginRequest.builder()
+                .email("test@test.com")
+                .password("password123")
+                .build();
 
-        // Act & Assert
+        // authService.login() returns LoginResponse, not a plain String
+        LoginResponse loginResponse = LoginResponse.builder()
+                .token("mocked-jwt-token")
+                .email("test@test.com")
+                .name("Omkar")
+                .role("USER")
+                .build();
+
+        when(authService.login(any())).thenReturn(loginResponse);
+
         mockMvc.perform(post("/api/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
-                .andExpect(jsonPath("$.data").value("mocked-jwt-token"));
+                .andExpect(jsonPath("$.data.token").value("mocked-jwt-token"))
+                .andExpect(jsonPath("$.data.email").value("test@test.com"))
+                .andExpect(jsonPath("$.data.role").value("USER"));
 
         verify(authService).login(any());
     }
 
     @Test
-    @DisplayName("POST /login - Failure: Returns 400 Bad Request on invalid input")
-    void login_ShouldFail_WhenInputIsInvalid() throws Exception {
-        // Arrange
-        LoginRequest request = new LoginRequest();
+    @DisplayName("POST /login - Failure: Returns 400 when email is missing")
+    void login_ShouldFail_WhenEmailIsMissing() throws Exception {
+        LoginRequest request = LoginRequest.builder()
+                .email("")
+                .password("password123")
+                .build();
 
-        // Act & Assert
         mockMvc.perform(post("/api/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.success").value(false));
 
-        // Verify: Service layer is protected from bad data
         verifyNoInteractions(authService);
     }
 
-    // USER ENDPOINT (STATUS CHECK)
+    @Test
+    @DisplayName("POST /login - Failure: Returns 400 when password is missing")
+    void login_ShouldFail_WhenPasswordIsMissing() throws Exception {
+        LoginRequest request = LoginRequest.builder()
+                .email("test@test.com")
+                .password("")
+                .build();
+
+        mockMvc.perform(post("/api/auth/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.success").value(false));
+
+        verifyNoInteractions(authService);
+    }
+
+    // ── STATUS CHECK ─────────────────────────────────────────────
 
     @Test
     @DisplayName("GET /user - Success: Returns hello message")

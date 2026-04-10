@@ -87,7 +87,7 @@ class AuthServiceImplTest {
         when(jwtService.generateToken(anyString())).thenReturn("fake-jwt-token");
 
         // Act
-        String token = authService.login(request);
+        String token = String.valueOf(authService.login(request));
 
         // Assert
         assertNotNull(token);
