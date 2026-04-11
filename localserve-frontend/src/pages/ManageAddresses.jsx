@@ -42,19 +42,13 @@ const ManageAddresses = () => {
     setForm(f => ({ ...f, [name]: type === "checkbox" ? checked : value }));
   };
 
-  // Geocode typed address using Nominatim (free, no API key)
   const geocodeAddress = async () => {
-    if (!form.addressLine.trim()) {
-      setError("Enter an address first");
-      return;
-    }
+    if (!form.addressLine.trim()) { setError("Enter an address first"); return; }
     setGeocoding(true);
     setError(null);
     try {
       const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(form.addressLine)}&limit=1`;
-      const res = await fetch(url, {
-        headers: { "Accept-Language": "en" }
-      });
+      const res = await fetch(url, { headers: { "Accept-Language": "en" } });
       const data = await res.json();
       if (data.length === 0) {
         setError("Address not found. Try a more specific address.");
@@ -66,13 +60,12 @@ const ManageAddresses = () => {
         longitude: parseFloat(data[0].lon).toFixed(6)
       }));
     } catch {
-      setError("Geocoding failed. Enter coordinates manually.");
+      setError("Geocoding failed. Please try again.");
     } finally {
       setGeocoding(false);
     }
   };
 
-  // GPS — get current location
   const useMyLocation = () => {
     if (!navigator.geolocation) {
       setError("Geolocation not supported by your browser.");
@@ -101,7 +94,7 @@ const ManageAddresses = () => {
     setError(null);
 
     if (!form.latitude || !form.longitude) {
-      setError("Click 'Find on map' or 'Use GPS' to get coordinates first.");
+      setError("Click 'Find on map' or 'Use GPS' to confirm location first.");
       return;
     }
 
@@ -114,7 +107,6 @@ const ManageAddresses = () => {
         longitude: parseFloat(form.longitude),
         isDefault: form.isDefault
       };
-
       if (editingId) {
         await updateAddress(editingId, payload);
       } else {
@@ -139,18 +131,31 @@ const ManageAddresses = () => {
     setEditingId(addr.id);
     setError(null);
     setForm({
-      label: addr.label,
-      addressLine: addr.addressLine,
-      latitude: addr.latitude,
-      longitude: addr.longitude,
-      isDefault: addr.isDefault
+      label: addr.label || "",
+      addressLine: addr.addressLine || "",
+      latitude: addr.latitude ?? "",
+      longitude: addr.longitude ?? "",
+      isDefault: addr.isDefault ?? false
     });
     window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm("Delete this address?")) return;
     setError(null);
+    const addr = addresses.find(a => a.id === id);
+
+    // block if only address
+    if (addresses.length === 1) {
+      setError("Cannot delete your only saved address. Add another address first.");
+      return;
+    }
+
+    const confirmMsg = addr.isDefault
+      ? `"${formatLabel(addr.label)}" is your default address. The next address will become your default. Delete anyway?`
+      : `Delete "${formatLabel(addr.label)} — ${addr.addressLine}"?`;
+
+    if (!window.confirm(confirmMsg)) return;
+
     try {
       await deleteAddress(id);
       await fetchAddresses();
@@ -182,11 +187,7 @@ const ManageAddresses = () => {
       {error && (
         <div className="alert alert-danger alert-dismissible py-2 small">
           {error}
-          <button
-            type="button"
-            className="btn-close"
-            onClick={() => setError(null)}
-          />
+          <button type="button" className="btn-close" onClick={() => setError(null)} />
         </div>
       )}
 
@@ -203,20 +204,17 @@ const ManageAddresses = () => {
         <div className="row g-3 mb-4">
           {addresses.map(addr => (
             <div key={addr.id} className="col-md-6 col-lg-4">
-              <div className={`card border-0 shadow-sm h-100 ${addr.default ? "border border-primary" : ""}`}>
+              <div className={`card border-0 shadow-sm h-100 ${addr.isDefault ? "border border-primary" : ""}`}>
                 <div className="card-body">
                   <div className="d-flex justify-content-between align-items-start mb-1">
                     <span className="fw-semibold">{formatLabel(addr.label)}</span>
-                    {addr.default && (
+                    {addr.isDefault && (
                       <span className="badge bg-primary">Default</span>
                     )}
                   </div>
-                  <p className="text-muted small mb-1">{addr.addressLine}</p>
-                  <p className="text-muted small mb-3" style={{fontSize:"11px"}}>
-                    {parseFloat(addr.latitude).toFixed(4)}, {parseFloat(addr.longitude).toFixed(4)}
-                  </p>
+                  <p className="text-muted small mb-3">{addr.addressLine}</p>
                   <div className="d-flex gap-2 flex-wrap">
-                    {!addr.default && (
+                    {!addr.isDefault && (
                       <button
                         className="btn btn-outline-primary btn-sm"
                         onClick={() => handleSetDefault(addr.id)}
@@ -277,7 +275,11 @@ const ManageAddresses = () => {
                     className="form-control"
                     name="addressLine"
                     value={form.addressLine}
-                    onChange={handleChange}
+                    onChange={(e) => {
+                      handleChange(e);
+                      // clear coords when address is edited
+                      setForm(f => ({ ...f, latitude: "", longitude: "" }));
+                    }}
                     placeholder="123 Main St, New York, NY"
                     required
                   />
@@ -291,51 +293,26 @@ const ManageAddresses = () => {
                       ? <span className="spinner-border spinner-border-sm" />
                       : "Find on map"}
                   </button>
+                  <button
+                    type="button"
+                    className="btn btn-outline-secondary"
+                    onClick={useMyLocation}
+                    disabled={locating}
+                  >
+                    {locating
+                      ? <span className="spinner-border spinner-border-sm" />
+                      : "Use GPS"}
+                  </button>
                 </div>
-                <div className="form-text">
-                  Type your address then click "Find on map" to auto-fill coordinates.
-                </div>
-              </div>
-
-              <div className="col-md-5">
-                <label className="form-label small fw-semibold">Latitude</label>
-                <input
-                  type="number"
-                  step="any"
-                  className="form-control"
-                  name="latitude"
-                  value={form.latitude}
-                  onChange={handleChange}
-                  placeholder="Auto-filled"
-                  required
-                />
-              </div>
-
-              <div className="col-md-5">
-                <label className="form-label small fw-semibold">Longitude</label>
-                <input
-                  type="number"
-                  step="any"
-                  className="form-control"
-                  name="longitude"
-                  value={form.longitude}
-                  onChange={handleChange}
-                  placeholder="Auto-filled"
-                  required
-                />
-              </div>
-
-              <div className="col-md-2 d-flex align-items-end">
-                <button
-                  type="button"
-                  className="btn btn-outline-secondary w-100"
-                  onClick={useMyLocation}
-                  disabled={locating}
-                >
-                  {locating
-                    ? <span className="spinner-border spinner-border-sm" />
-                    : "Use GPS"}
-                </button>
+                {form.latitude && form.longitude ? (
+                  <div className="form-text text-success">
+                    Location confirmed.
+                  </div>
+                ) : (
+                  <div className="form-text">
+                    Type address and click "Find on map", or use GPS to auto-detect.
+                  </div>
+                )}
               </div>
 
               <div className="col-12">

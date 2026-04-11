@@ -26,14 +26,12 @@ public class Booking {
     @JoinColumn(name = "service_address_id", nullable = true)
     private UserAddress serviceAddress;
 
-    // PROVIDER
     @ManyToOne
     @JoinColumn(name = "provider_id", nullable = false)
     private Provider provider;
 
-    // ServiceOffering
     @ManyToOne
-    @JoinColumn(name = "service_offering_id", nullable = false)
+    @JoinColumn(name = "service_offering_id", nullable = true)
     private ServiceOffering serviceOffering;
 
     @Enumerated(EnumType.STRING)

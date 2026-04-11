@@ -13,12 +13,12 @@ import BecomeProvider from "../pages/BecomeProvider";
 import EditProviderProfile from "../pages/EditProviderProfile";
 
 // Phase 2 — uncomment when built
-// import ProviderDetail from "../pages/ProviderDetail";
-// import MyBookings from "../pages/MyBookings";
+import ProviderDetail from "../pages/ProviderDetail";
+import MyBookings from "../pages/MyBookings";
 
 // Phase 4 — uncomment when built
-// import ProviderDashboard from "../pages/ProviderDashboard";
-// import IncomingBookings from "../pages/IncomingBookings";
+import ProviderDashboard from "../pages/ProviderDashboard";
+import IncomingBookings from "../pages/IncomingBookings";
 
 const ProviderRoute = ({ children }) => {
   const { user, isAuthenticated } = useAuth();
@@ -51,13 +51,13 @@ const AppRoutes = () => {
         {/* USER only */}
         <Route path="/providers" element={<UserOnlyRoute><Providers /></UserOnlyRoute>} />
         <Route path="/become-provider" element={<UserOnlyRoute><BecomeProvider /></UserOnlyRoute>} />
-        {/* <Route path="/providers/:id" element={<UserOnlyRoute><ProviderDetail /></UserOnlyRoute>} /> */}
-        {/* <Route path="/bookings/my" element={<UserOnlyRoute><MyBookings /></UserOnlyRoute>} /> */}
+        <Route path="/providers/:id" element={<UserOnlyRoute><ProviderDetail /></UserOnlyRoute>} />
+        <Route path="/bookings/my" element={<UserOnlyRoute><MyBookings /></UserOnlyRoute>} />
 
         {/* PROVIDER only */}
         <Route path="/provider/profile/edit" element={<ProviderRoute><EditProviderProfile /></ProviderRoute>} />
-        {/* <Route path="/provider/dashboard" element={<ProviderRoute><ProviderDashboard /></ProviderRoute>} /> */}
-        {/* <Route path="/provider/bookings" element={<ProviderRoute><IncomingBookings /></ProviderRoute>} /> */}
+        <Route path="/provider/dashboard" element={<ProviderRoute><ProviderDashboard /></ProviderRoute>} />
+        <Route path="/provider/bookings" element={<ProviderRoute><IncomingBookings /></ProviderRoute>} />
 
         {/* Fallback */}
         <Route path="*" element={<Navigate to="/login" replace />} />

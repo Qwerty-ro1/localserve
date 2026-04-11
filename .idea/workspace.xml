@@ -5,40 +5,36 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a8482d62-e858-4ae0-b6c3-e6d0505c97e1" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/localserve-backend/src/main/java/com/localserve/localserve/dto/LoginResponse.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/localserve-backend/insert-test-data.sql" beforeDir="false" afterPath="$PROJECT_DIR$/localserve-backend/insert-test-data.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/localserve-backend/HOW_TO_LOAD_DATA.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/localserve-backend/insert-test-data.sql" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/localserve-backend/src/main/java/com/localserve/localserve/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/localserve-backend/src/main/java/com/localserve/localserve/config/SecurityConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/localserve-backend/src/main/java/com/localserve/localserve/controller/AuthController.java" beforeDir="false" afterPath="$PROJECT_DIR$/localserve-backend/src/main/java/com/localserve/localserve/controller/AuthController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/localserve-backend/src/main/java/com/localserve/localserve/controller/BookingController.java" beforeDir="false" afterPath="$PROJECT_DIR$/localserve-backend/src/main/java/com/localserve/localserve/controller/BookingController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/localserve-backend/src/main/java/com/localserve/localserve/controller/ProviderController.java" beforeDir="false" afterPath="$PROJECT_DIR$/localserve-backend/src/main/java/com/localserve/localserve/controller/ProviderController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/localserve-backend/src/main/java/com/localserve/localserve/dto/BookingResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/localserve-backend/src/main/java/com/localserve/localserve/dto/BookingResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/localserve-backend/src/main/java/com/localserve/localserve/dto/CreateBookingRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/localserve-backend/src/main/java/com/localserve/localserve/dto/CreateBookingRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/localserve-backend/src/main/java/com/localserve/localserve/dto/RegisterRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/localserve-backend/src/main/java/com/localserve/localserve/dto/RegisterRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/localserve-backend/src/main/java/com/localserve/localserve/dto/ProviderResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/localserve-backend/src/main/java/com/localserve/localserve/dto/ProviderResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/localserve-backend/src/main/java/com/localserve/localserve/dto/UserAddressRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/localserve-backend/src/main/java/com/localserve/localserve/dto/UserAddressRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/localserve-backend/src/main/java/com/localserve/localserve/dto/UserAddressResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/localserve-backend/src/main/java/com/localserve/localserve/dto/UserAddressResponse.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/localserve-backend/src/main/java/com/localserve/localserve/entity/Booking.java" beforeDir="false" afterPath="$PROJECT_DIR$/localserve-backend/src/main/java/com/localserve/localserve/entity/Booking.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/localserve-backend/src/main/java/com/localserve/localserve/entity/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/localserve-backend/src/main/java/com/localserve/localserve/entity/User.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/localserve-backend/src/main/java/com/localserve/localserve/exception/GlobalExceptionHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/localserve-backend/src/main/java/com/localserve/localserve/exception/GlobalExceptionHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/localserve-backend/src/main/java/com/localserve/localserve/entity/Provider.java" beforeDir="false" afterPath="$PROJECT_DIR$/localserve-backend/src/main/java/com/localserve/localserve/entity/Provider.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/localserve-backend/src/main/java/com/localserve/localserve/entity/UserAddress.java" beforeDir="false" afterPath="$PROJECT_DIR$/localserve-backend/src/main/java/com/localserve/localserve/entity/UserAddress.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/localserve-backend/src/main/java/com/localserve/localserve/repository/BookingRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/localserve-backend/src/main/java/com/localserve/localserve/repository/BookingRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/localserve-backend/src/main/java/com/localserve/localserve/repository/UserAddressRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/localserve-backend/src/main/java/com/localserve/localserve/repository/UserAddressRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/localserve-backend/src/main/java/com/localserve/localserve/security/JwtService.java" beforeDir="false" afterPath="$PROJECT_DIR$/localserve-backend/src/main/java/com/localserve/localserve/security/JwtService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/localserve-backend/src/main/java/com/localserve/localserve/service/AuthService.java" beforeDir="false" afterPath="$PROJECT_DIR$/localserve-backend/src/main/java/com/localserve/localserve/service/AuthService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/localserve-backend/src/main/java/com/localserve/localserve/service/BookingService.java" beforeDir="false" afterPath="$PROJECT_DIR$/localserve-backend/src/main/java/com/localserve/localserve/service/BookingService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/localserve-backend/src/main/java/com/localserve/localserve/service/impl/AuthServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/localserve-backend/src/main/java/com/localserve/localserve/service/impl/AuthServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/localserve-backend/src/main/java/com/localserve/localserve/service/impl/BookingServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/localserve-backend/src/main/java/com/localserve/localserve/service/impl/BookingServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/localserve-backend/src/main/java/com/localserve/localserve/service/impl/ProviderServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/localserve-backend/src/main/java/com/localserve/localserve/service/impl/ProviderServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/localserve-backend/src/test/java/com/localserve/localserve/controller/AuthControllerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/localserve-backend/src/test/java/com/localserve/localserve/controller/AuthControllerTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/localserve-backend/src/test/java/com/localserve/localserve/service/impl/AuthServiceImplTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/localserve-backend/src/test/java/com/localserve/localserve/service/impl/AuthServiceImplTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/localserve-frontend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/localserve-frontend/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/localserve-frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/localserve-frontend/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/localserve-frontend/src/api/providerApi.js" beforeDir="false" afterPath="$PROJECT_DIR$/localserve-frontend/src/api/providerApi.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/localserve-frontend/src/components/AuthGuard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/localserve-frontend/src/components/AuthGuard.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/localserve-frontend/src/components/BackButtonWarning.jsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/localserve-frontend/src/context/AuthContext.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/localserve-frontend/src/context/AuthContext.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/localserve-backend/src/main/java/com/localserve/localserve/service/impl/UserAddressServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/localserve-backend/src/main/java/com/localserve/localserve/service/impl/UserAddressServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/localserve-backend/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/localserve-backend/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/localserve-backend/src/test/java/com/localserve/localserve/controller/AuthControllerTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/localserve-backend/src/test/java/com/localserve/localserve/controller/BookingControllerTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/localserve-backend/src/test/java/com/localserve/localserve/controller/ProviderControllerTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/localserve-backend/src/test/java/com/localserve/localserve/exception/GlobalExceptionHandlerTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/localserve-backend/src/test/java/com/localserve/localserve/service/impl/AuthServiceImplTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/localserve-backend/src/test/java/com/localserve/localserve/service/impl/BookingServiceImplTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/localserve-backend/src/test/java/com/localserve/localserve/service/impl/ProviderServiceImplTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/localserve-frontend/src/pages/BecomeProvider.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/localserve-frontend/src/pages/BecomeProvider.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/localserve-frontend/src/pages/Dashboard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/localserve-frontend/src/pages/Dashboard.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/localserve-frontend/src/pages/EditProviderProfile.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/localserve-frontend/src/pages/EditProviderProfile.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/localserve-frontend/src/pages/ManageAddresses.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/localserve-frontend/src/pages/ManageAddresses.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/localserve-frontend/src/pages/Providers.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/localserve-frontend/src/pages/Providers.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/localserve-frontend/src/pages/Register.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/localserve-frontend/src/pages/Register.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/localserve-frontend/src/pages/login.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/localserve-frontend/src/pages/login.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/localserve-frontend/src/routes/AppRoutes.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/localserve-frontend/src/routes/AppRoutes.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/localserve-frontend/src/routes/PrivateRoute.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/localserve-frontend/src/routes/PrivateRoute.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -58,6 +54,7 @@
       <list>
         <option value="Enum" />
         <option value="Class" />
+        <option value="Dockerfile" />
       </list>
     </option>
   </component>

@@ -1,11 +1,18 @@
-﻿import { useAuth } from "../context/AuthContext";
+﻿import { useEffect } from "react";
+import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { FaUser, FaCrown, FaBuilding, FaSearch, FaCalendarAlt, FaStore, FaMapMarkerAlt } from "react-icons/fa";
+import { FaUser, FaCrown, FaBuilding, FaSearch, FaCalendarAlt, FaStore, FaMapMarkerAlt, FaStar } from "react-icons/fa";
 
 const Dashboard = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const isProvider = user?.role === "PROVIDER";
+
+  useEffect(() => {
+    if (user?.role === "PROVIDER") {
+      navigate("/provider/dashboard", { replace: true });
+    }
+  }, [user]);
 
   const getRoleBadge = (role) => {
     const map = {
@@ -27,7 +34,6 @@ const Dashboard = () => {
 
   return (
     <div>
-      {/* Hero */}
       <div className="bg-primary text-white py-4">
         <div className="container">
           <h5 className="fw-bold mb-0">
@@ -44,7 +50,6 @@ const Dashboard = () => {
       <div className="container py-4">
         <div className="row g-4">
 
-          {/* Profile card */}
           <div className="col-lg-8">
             <div className="card border-0 shadow-sm">
               <div className="card-body p-4">
@@ -82,7 +87,6 @@ const Dashboard = () => {
             </div>
           </div>
 
-          {/* Quick actions */}
           <div className="col-lg-4">
             <div className="card border-0 shadow-sm">
               <div className="card-header bg-white">

@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { searchProviders } from "../api/providerApi";
 import { getCategories } from "../api/categoryApi";
 import AddressSelector from "../components/AddressSelector";
+import { FaStar } from "react-icons/fa";
+
 
 const Providers = () => {
   const navigate = useNavigate();
@@ -183,7 +185,9 @@ const Providers = () => {
                       <strong>Experience:</strong> {provider.experienceYears || 0} yrs
                     </p>
                     <p className="mb-1">
-                      <strong>Rating:</strong> ⭐ {provider.rating || 0}/5
+                      <strong>Rating:</strong>{" "}
+                      <FaStar className="text-warning me-1" style={{ fontSize: 12 }} />
+                      {provider.rating || 0}/5
                     </p>
                     <p className="mb-1">
                       <strong>Radius:</strong> {provider.serviceRadius || 0} km

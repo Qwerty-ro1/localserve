@@ -6,7 +6,7 @@ import com.localserve.localserve.entity.*;
 import com.localserve.localserve.exception.BadRequestException;
 import com.localserve.localserve.exception.ForbiddenException;
 import com.localserve.localserve.exception.ResourceNotFoundException;
-import com.localserve.localserve.exception.UnauthorizedException;
+import com.localserve.localserve.repository.BookingRepository;
 import com.localserve.localserve.repository.MasterServiceCategoryRepository;
 import com.localserve.localserve.repository.ProviderRepository;
 import com.localserve.localserve.repository.UserRepository;
@@ -19,6 +19,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,6 +31,7 @@ public class ProviderServiceImpl implements ProviderService {
     private final ProviderRepository providerRepository;
     private final UserRepository userRepository;
     private final MasterServiceCategoryRepository masterServiceCategoryRepository;
+    private final BookingRepository bookingRepository;
 
     private static final double EARTH_RADIUS = 6371;
 
@@ -62,20 +64,16 @@ public class ProviderServiceImpl implements ProviderService {
                 .rating(0.0)
                 .build();
 
-        // Map serviceCategoryIds to ServiceOffering
-        List<ServiceOffering> offerings = request.getServiceCategoryIds()
-                .stream()
-                .map(id -> {
-                    MasterServiceCategory category = masterServiceCategoryRepository.findById(id)
-                            .orElseThrow(() -> new ResourceNotFoundException("Service category not found"));
-                    return ServiceOffering.builder()
+        request.getServiceCategoryIds().forEach(id -> {
+            MasterServiceCategory category = masterServiceCategoryRepository.findById(id)
+                    .orElseThrow(() -> new ResourceNotFoundException("Service category not found"));
+            provider.getOfferings().add(
+                    ServiceOffering.builder()
                             .serviceCategory(category)
                             .provider(provider)
-                            .build();
-                })
-                .toList();
-
-        provider.setOfferings(offerings);
+                            .build()
+            );
+        });
 
         providerRepository.save(provider);
 
@@ -116,21 +114,25 @@ public class ProviderServiceImpl implements ProviderService {
         provider.setLatitude(request.getLatitude());
         provider.setLongitude(request.getLongitude());
 
+        // nullify serviceOffering FK on any bookings referencing these offerings
+        // before clearing — prevents FK violation on service_offerings delete
+        provider.getOfferings().forEach(offering ->
+                bookingRepository.nullifyServiceOffering(offering.getId())
+        );
+
         provider.getOfferings().clear();
 
-        List<ServiceOffering> offerings = request.getServiceCategoryIds()
-                .stream()
-                .map(catId -> {
-                    MasterServiceCategory category = masterServiceCategoryRepository.findById(catId)
-                            .orElseThrow(() -> new ResourceNotFoundException("Service category not found"));
-                    return ServiceOffering.builder()
+        request.getServiceCategoryIds().forEach(catId -> {
+            MasterServiceCategory category = masterServiceCategoryRepository.findById(catId)
+                    .orElseThrow(() -> new ResourceNotFoundException("Service category not found"));
+            provider.getOfferings().add(
+                    ServiceOffering.builder()
                             .serviceCategory(category)
                             .provider(provider)
-                            .build();
-                })
-                .toList();
+                            .build()
+            );
+        });
 
-        provider.setOfferings(offerings);
         providerRepository.save(provider);
 
         return mapToResponse(provider);
@@ -161,7 +163,6 @@ public class ProviderServiceImpl implements ProviderService {
             String sortBy,
             String direction
     ) {
-
         List<Provider> providers;
 
         if (serviceCategoryId == null) {
@@ -172,7 +173,8 @@ public class ProviderServiceImpl implements ProviderService {
 
         List<ProviderResponse> filteredList = providers.stream()
                 .map(provider -> {
-                    double distance = calculateDistance(lat, lon, provider.getLatitude(), provider.getLongitude());
+                    double distance = calculateDistance(lat, lon,
+                            provider.getLatitude(), provider.getLongitude());
                     if (distance <= radius) {
                         ProviderResponse response = mapToResponse(provider);
                         response.setDistance(distance);
@@ -183,56 +185,42 @@ public class ProviderServiceImpl implements ProviderService {
                 .filter(p -> p != null)
                 .collect(Collectors.toList());
 
-        if (!List.of("rating", "distance").contains(sortBy)) {
-            sortBy = "distance";
-        }
+        if (!List.of("rating", "distance").contains(sortBy)) sortBy = "distance";
 
         if (sortBy.equals("rating")) {
-            if (direction.equalsIgnoreCase("desc")) {
-                filteredList.sort((a, b) -> Double.compare(b.getRating(), a.getRating()));
-            } else {
-                filteredList.sort((a, b) -> Double.compare(a.getRating(), b.getRating()));
-            }
-        }
-
-        if (sortBy.equals("distance")) {
-            if (direction.equalsIgnoreCase("desc")) {
-                filteredList.sort((a, b) -> Double.compare(b.getDistance(), a.getDistance()));
-            } else {
-                filteredList.sort((a, b) -> Double.compare(a.getDistance(), b.getDistance()));
-            }
+            filteredList.sort(direction.equalsIgnoreCase("desc")
+                    ? (a, b) -> Double.compare(b.getRating(), a.getRating())
+                    : (a, b) -> Double.compare(a.getRating(), b.getRating()));
+        } else {
+            filteredList.sort(direction.equalsIgnoreCase("desc")
+                    ? (a, b) -> Double.compare(b.getDistance(), a.getDistance())
+                    : (a, b) -> Double.compare(a.getDistance(), b.getDistance()));
         }
 
         int start = page * size;
         int end = Math.min(start + size, filteredList.size());
 
         if (start >= filteredList.size()) {
-            return new PageImpl<>(Collections.emptyList(), PageRequest.of(page, size), filteredList.size());
+            return new PageImpl<>(Collections.emptyList(),
+                    PageRequest.of(page, size), filteredList.size());
         }
 
-        List<ProviderResponse> pageContent = filteredList.subList(start, end);
-
-        return new PageImpl<>(pageContent, PageRequest.of(page, size), filteredList.size());
+        return new PageImpl<>(filteredList.subList(start, end),
+                PageRequest.of(page, size), filteredList.size());
     }
 
-    private double calculateDistance(double lat1, double lon1, double lat2, double lon2) {
-
+    private double calculateDistance(double lat1, double lon1,
+                                     double lat2, double lon2) {
         double latDistance = Math.toRadians(lat2 - lat1);
         double lonDistance = Math.toRadians(lon2 - lon1);
-
         double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
                 + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2))
                 * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
-
-        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-
-        return EARTH_RADIUS * c;
+        return EARTH_RADIUS * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     }
 
     private ProviderResponse mapToResponse(Provider provider) {
-
         ProviderResponse response = new ProviderResponse();
-
         response.setId(provider.getId());
         response.setBusinessName(provider.getBusinessName());
         response.setDescription(provider.getDescription());
@@ -246,6 +234,15 @@ public class ProviderServiceImpl implements ProviderService {
         response.setServices(
                 provider.getOfferings().stream()
                         .map(o -> o.getServiceCategory().getName())
+                        .collect(Collectors.toList())
+        );
+
+        response.setOfferings(
+                provider.getOfferings().stream()
+                        .map(o -> ProviderResponse.ServiceOfferingDto.builder()
+                                .id(o.getId())
+                                .categoryName(o.getServiceCategory().getName())
+                                .build())
                         .collect(Collectors.toList())
         );
 

@@ -1,5 +1,6 @@
 package com.localserve.localserve.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.localserve.localserve.entity.AddressLabel;
 import lombok.Builder;
 import lombok.Data;
@@ -12,5 +13,6 @@ public class UserAddressResponse {
     private String addressLine;
     private double latitude;
     private double longitude;
-    private boolean isDefault;
+    @JsonProperty("isDefault")
+    private boolean defaultAddress;
 }

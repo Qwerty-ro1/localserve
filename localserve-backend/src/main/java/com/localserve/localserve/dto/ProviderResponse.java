@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.util.List;
 
-
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -23,5 +22,15 @@ public class ProviderResponse {
     private double latitude;
     private double longitude;
     private Double distance;
-    private List<String> services;;
+    private List<String> services;
+    private List<ServiceOfferingDto> offerings;  // new — includes id for booking
+
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ServiceOfferingDto {
+        private Long id;
+        private String categoryName;
+    }
 }

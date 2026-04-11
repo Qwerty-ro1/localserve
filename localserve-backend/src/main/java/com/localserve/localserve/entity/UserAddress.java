@@ -32,8 +32,8 @@ public class UserAddress {
     @Column(nullable = false)
     private double longitude;
 
-    @Column(nullable = false)
-    private boolean isDefault;
+    @Column(name = "is_default")
+    private boolean defaultAddress;
 
 
 }
