@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -23,8 +24,9 @@ public class Provider {
     @JoinColumn(name = "user_id", nullable = false, unique = true)
     private User user;
 
+    @Builder.Default
     @OneToMany(mappedBy = "provider", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ServiceOffering> offerings;
+    private List<ServiceOffering> offerings = new ArrayList<>();
 
     @OneToMany(mappedBy = "provider")
     @JsonIgnore

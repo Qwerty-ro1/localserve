@@ -29,4 +29,9 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     @Query("UPDATE Booking b SET b.serviceAddress = null WHERE b.serviceAddress.id = :addressId")
     void nullifyServiceAddress(@Param("addressId") Long addressId);
 
+    @Modifying
+    @Transactional
+    @Query("UPDATE Booking b SET b.serviceOffering = null WHERE b.serviceOffering.id = :offeringId")
+    void nullifyServiceOffering(@Param("offeringId") Long offeringId);
+
 }

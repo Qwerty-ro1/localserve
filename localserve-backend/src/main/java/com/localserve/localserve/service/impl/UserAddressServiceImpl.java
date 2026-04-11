@@ -40,7 +40,7 @@ public class UserAddressServiceImpl implements UserAddressService {
         User user = getUser(email);
         boolean isFirst = userAddressRepository.countByUserId(user.getId()) == 0;
 
-        if (request.isDefault() || isFirst) {
+        if (request.isDefaultAddress() || isFirst) {
             unsetAllDefaults(user.getId());
         }
 
@@ -50,7 +50,7 @@ public class UserAddressServiceImpl implements UserAddressService {
                 .addressLine(request.getAddressLine())
                 .latitude(request.getLatitude())
                 .longitude(request.getLongitude())
-                .isDefault(request.isDefault() || isFirst)
+                .defaultAddress(request.isDefaultAddress() || userAddressRepository.countByUserId(user.getId()) == 0)
                 .build();
 
         return toResponse(userAddressRepository.save(address));
@@ -62,7 +62,7 @@ public class UserAddressServiceImpl implements UserAddressService {
         User user = getUser(email);
         UserAddress address = getAddressOwned(user, addressId);
 
-        if (request.isDefault()) {
+        if (request.isDefaultAddress()) {
             unsetAllDefaults(user.getId());
         }
 
@@ -70,7 +70,7 @@ public class UserAddressServiceImpl implements UserAddressService {
         address.setAddressLine(request.getAddressLine());
         address.setLatitude(request.getLatitude());
         address.setLongitude(request.getLongitude());
-        address.setDefault(request.isDefault());
+        address.setDefaultAddress(request.isDefaultAddress());
 
         return toResponse(userAddressRepository.save(address));
     }
@@ -91,12 +91,12 @@ public class UserAddressServiceImpl implements UserAddressService {
         bookingRepository.nullifyServiceAddress(addressId);
 
         // if deleting default, promote next available address
-        if (address.isDefault()) {
+        if (address.isDefaultAddress()) {
             allAddresses.stream()
                     .filter(a -> !a.getId().equals(addressId))
                     .findFirst()
                     .ifPresent(next -> {
-                        next.setDefault(true);
+                        next.setDefaultAddress(true);
                         userAddressRepository.save(next);
                     });
         }
@@ -111,14 +111,14 @@ public class UserAddressServiceImpl implements UserAddressService {
         User user = getUser(email);
         unsetAllDefaults(user.getId());
         UserAddress address = getAddressOwned(user, addressId);
-        address.setDefault(true);
+        address.setDefaultAddress(true);
         return toResponse(userAddressRepository.save(address));
     }
 
 
     private void unsetAllDefaults(Long userId) {
         List<UserAddress> defaults = userAddressRepository.findByUserId(userId);
-        defaults.forEach(a -> a.setDefault(false));
+        defaults.forEach(a -> a.setDefaultAddress(false));
         userAddressRepository.saveAll(defaults);
     }
 
@@ -143,7 +143,7 @@ public class UserAddressServiceImpl implements UserAddressService {
                 .addressLine(a.getAddressLine())
                 .latitude(a.getLatitude())
                 .longitude(a.getLongitude())
-                .isDefault(a.isDefault())
+                .defaultAddress(a.isDefaultAddress())
                 .build();
     }
 }

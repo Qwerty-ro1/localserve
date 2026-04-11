@@ -3,6 +3,7 @@ package com.localserve.localserve.security;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
@@ -12,7 +13,8 @@ import java.util.Map;
 @Service
 public class JwtService {
 
-    private static final String SECRET = "mysecretkeymysecretkeymysecretkey123";
+    @Value("${jwt.secret}")
+    private String SECRET;
 
     private SecretKey getSignKey() {
         return Keys.hmacShaKeyFor(SECRET.getBytes());

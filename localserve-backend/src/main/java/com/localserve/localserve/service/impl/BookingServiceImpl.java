@@ -54,7 +54,7 @@ public class BookingServiceImpl implements BookingService {
         } else {
             // fall back to default address if no address provided
             serviceAddress = userAddressRepository
-                    .findByUserIdAndIsDefaultTrue(user.getId())
+                    .findByUserIdAndDefaultAddressTrue(user.getId())
                     .orElse(null);
         }
 
@@ -175,7 +175,9 @@ public class BookingServiceImpl implements BookingService {
                 .userPhone(booking.getUser().getPhone())
                 .providerId(booking.getProvider().getId())
                 .providerName(booking.getProvider().getBusinessName())
-                .serviceName(booking.getServiceOffering().getServiceCategory().getName())
+                .serviceName(booking.getServiceOffering() != null
+                        ? booking.getServiceOffering().getServiceCategory().getName()
+                        : "Service removed")
                 .serviceAddress(mapAddressToResponse(booking.getServiceAddress()))
                 .build();
     }
@@ -188,7 +190,7 @@ public class BookingServiceImpl implements BookingService {
                 .addressLine(address.getAddressLine())
                 .latitude(address.getLatitude())
                 .longitude(address.getLongitude())
-                .isDefault(address.isDefault())
+                .defaultAddress(address.isDefaultAddress())
                 .build();
     }
 }

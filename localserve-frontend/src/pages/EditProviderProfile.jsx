@@ -244,7 +244,11 @@ const EditProviderProfile = () => {
                         className="form-control"
                         name="location"
                         value={form.location}
-                        onChange={handleChange}
+                        onChange={(e) => {
+                          handleChange(e);
+                          // clear coords when address is edited — forces re-geocode
+                          setForm(f => ({ ...f, latitude: "", longitude: "" }));
+                        }}
                         required
                       />
                       <button
@@ -258,30 +262,15 @@ const EditProviderProfile = () => {
                           : "Find on map"}
                       </button>
                     </div>
-                  </div>
-                  <div className="col-md-6">
-                    <label className="form-label small fw-semibold">Latitude</label>
-                    <input
-                      type="number"
-                      step="any"
-                      className="form-control"
-                      name="latitude"
-                      value={form.latitude}
-                      onChange={handleChange}
-                      placeholder="Auto-filled"
-                    />
-                  </div>
-                  <div className="col-md-6">
-                    <label className="form-label small fw-semibold">Longitude</label>
-                    <input
-                      type="number"
-                      step="any"
-                      className="form-control"
-                      name="longitude"
-                      value={form.longitude}
-                      onChange={handleChange}
-                      placeholder="Auto-filled"
-                    />
+                    {form.latitude && form.longitude ? (
+                      <div className="form-text text-success">
+                        Location confirmed.
+                      </div>
+                    ) : (
+                      <div className="form-text">
+                        Click "Find on map" to confirm your location coordinates.
+                      </div>
+                    )}
                   </div>
                 </div>
 

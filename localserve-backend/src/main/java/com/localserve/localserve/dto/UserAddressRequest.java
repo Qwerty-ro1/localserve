@@ -1,5 +1,6 @@
 package com.localserve.localserve.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.localserve.localserve.entity.AddressLabel;
 import jakarta.validation.constraints.*;
 import lombok.Data;
@@ -19,5 +20,6 @@ public class UserAddressRequest {
     @NotNull(message = "Longitude is required")
     private Double longitude;
 
-    private boolean isDefault;
+    @JsonProperty("isDefault")
+    private boolean defaultAddress;
 }

@@ -10,7 +10,7 @@ public interface UserAddressRepository extends JpaRepository<UserAddress, Long> 
 
     List<UserAddress> findByUserId(Long userId);
 
-    Optional<UserAddress> findByUserIdAndIsDefaultTrue(Long userId);
+    Optional<UserAddress> findByUserIdAndDefaultAddressTrue(Long userId);
 
     long countByUserId(Long userId);
 }
